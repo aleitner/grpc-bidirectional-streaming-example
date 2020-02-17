@@ -1,17 +1,15 @@
-package main
+package bidirectional
 
 import (
 	"context"
 	"fmt"
 	"io"
 	"log"
-	"os"
 	"sync"
 
-	"github.com/urfave/cli"
-	"google.golang.org/grpc"
+	pb "grpc-bidirectional-stream/pkg/proto"
 
-	"grpc-bidirectional-stream/proto"
+	"google.golang.org/grpc"
 )
 
 // SampleClient allows access to Bidirectional stream method and closing conn
@@ -86,37 +84,4 @@ func (client *Client) Bidirectional(ctx context.Context) error {
 	wg.Wait()
 
 	return nil
-}
-
-func main() {
-	app := cli.NewApp()
-
-	// Set up connection with rpc server
-	var conn *grpc.ClientConn
-	conn, err := grpc.Dial(":8080", grpc.WithInsecure())
-	if err != nil {
-		log.Fatalf("grpc Dial fail: %s/n", err)
-	}
-
-	client := NewSampleClient(conn)
-	defer client.CloseConn()
-
-	app.Commands = []cli.Command{
-		{
-			Name:    "bidirectional",
-			Aliases: []string{"u"},
-			Usage:   "bidirectional data",
-			Action: func(c *cli.Context) error {
-				err := client.Bidirectional(context.Background())
-				if err != nil {
-					return err
-				}
-				return nil
-			},
-		},
-	}
-	err = app.Run(os.Args)
-	if err != nil {
-		log.Fatalf("app Run fail: %s/n", err)
-	}
 }
