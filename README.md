@@ -1,6 +1,13 @@
-#grpc-bidirectional-stream
+# grpc-bidirectional-stream
 
 Provide Example `client` and `server` code for bidirectional streaming using grpc.
+
+## Dependencies
+* protoc-gen-go
+```bash
+go get -u github.com/golang/protobuf/protoc-gen-go
+```
+
 
 ## Build 
 
